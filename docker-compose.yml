@@ -1,0 +1,142 @@
+services:
+  broker-1:
+    build: .
+    command: uvicorn broker:app --host 0.0.0.0 --port 8000
+    environment:
+      BROKER_ID: 1
+      BROKER_URL: http://broker-1:8000
+      PEERS: http://broker-2:8000,http://broker-3:8000,http://broker-4:8000
+    ports:
+      - "8001:8000"
+
+  broker-2:
+    build: .
+    command: uvicorn broker:app --host 0.0.0.0 --port 8000
+    environment:
+      BROKER_ID: 2
+      BROKER_URL: http://broker-2:8000
+      PEERS: http://broker-1:8000,http://broker-3:8000,http://broker-4:8000
+    ports:
+      - "8002:8000"
+
+  broker-3:
+    build: .
+    command: uvicorn broker:app --host 0.0.0.0 --port 8000
+    environment:
+      BROKER_ID: 3
+      BROKER_URL: http://broker-3:8000
+      PEERS: http://broker-1:8000,http://broker-2:8000,http://broker-4:8000
+    ports:
+      - "8003:8000"
+
+  broker-4:
+    build: .
+    command: uvicorn broker:app --host 0.0.0.0 --port 8000
+    environment:
+      BROKER_ID: 4
+      BROKER_URL: http://broker-4:8000
+      PEERS: http://broker-1:8000,http://broker-2:8000,http://broker-3:8000
+    ports:
+      - "8004:8000"
+
+  sensor-1:
+    build: .
+    command: python sensor.py
+    environment:
+      SENSOR_ID: sensor-1
+      SECTOR_ID: 1
+      BROKERS: http://broker-1:8000,http://broker-2:8000,http://broker-3:8000,http://broker-4:8000
+    depends_on: [broker-1, broker-2, broker-3, broker-4]
+
+  sensor-2:
+    build: .
+    command: python sensor.py
+    environment:
+      SENSOR_ID: sensor-2
+      SECTOR_ID: 2
+      BROKERS: http://broker-1:8000,http://broker-2:8000,http://broker-3:8000,http://broker-4:8000
+    depends_on: [broker-1, broker-2, broker-3, broker-4]
+
+  sensor-3:
+    build: .
+    command: python sensor.py
+    environment:
+      SENSOR_ID: sensor-3
+      SECTOR_ID: 3
+      BROKERS: http://broker-1:8000,http://broker-2:8000,http://broker-3:8000,http://broker-4:8000
+    depends_on: [broker-1, broker-2, broker-3, broker-4]
+
+  sensor-4:
+    build: .
+    command: python sensor.py
+    environment:
+      SENSOR_ID: sensor-4
+      SECTOR_ID: 4
+      BROKERS: http://broker-1:8000,http://broker-2:8000,http://broker-3:8000,http://broker-4:8000
+    depends_on: [broker-1, broker-2, broker-3, broker-4]
+
+  drone-1: &drone
+    build: .
+    command: python drone.py
+    environment:
+      DRONE_ID: drone-1
+      DRONE_URL: http://drone-1:9000
+      PORT: 9000
+      BROKERS: http://broker-1:8000,http://broker-2:8000,http://broker-3:8000,http://broker-4:8000
+    depends_on: [broker-1, broker-2, broker-3, broker-4]
+
+  drone-2:
+    <<: *drone
+    environment:
+      DRONE_ID: drone-2
+      DRONE_URL: http://drone-2:9000
+      PORT: 9000
+      BROKERS: http://broker-1:8000,http://broker-2:8000,http://broker-3:8000,http://broker-4:8000
+
+  drone-3:
+    <<: *drone
+    environment:
+      DRONE_ID: drone-3
+      DRONE_URL: http://drone-3:9000
+      PORT: 9000
+      BROKERS: http://broker-1:8000,http://broker-2:8000,http://broker-3:8000,http://broker-4:8000
+
+  drone-4:
+    <<: *drone
+    environment:
+      DRONE_ID: drone-4
+      DRONE_URL: http://drone-4:9000
+      PORT: 9000
+      BROKERS: http://broker-1:8000,http://broker-2:8000,http://broker-3:8000,http://broker-4:8000
+
+  drone-5:
+    <<: *drone
+    environment:
+      DRONE_ID: drone-5
+      DRONE_URL: http://drone-5:9000
+      PORT: 9000
+      BROKERS: http://broker-1:8000,http://broker-2:8000,http://broker-3:8000,http://broker-4:8000
+
+  drone-6:
+    <<: *drone
+    environment:
+      DRONE_ID: drone-6
+      DRONE_URL: http://drone-6:9000
+      PORT: 9000
+      BROKERS: http://broker-1:8000,http://broker-2:8000,http://broker-3:8000,http://broker-4:8000
+
+  drone-7:
+    <<: *drone
+    environment:
+      DRONE_ID: drone-7
+      DRONE_URL: http://drone-7:9000
+      PORT: 9000
+      BROKERS: http://broker-1:8000,http://broker-2:8000,http://broker-3:8000,http://broker-4:8000
+
+  drone-8:
+    <<: *drone
+    environment:
+      DRONE_ID: drone-8
+      DRONE_URL: http://drone-8:9000
+      PORT: 9000
+      BROKERS: http://broker-1:8000,http://broker-2:8000,http://broker-3:8000,http://broker-4:8000
